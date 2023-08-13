@@ -76,7 +76,7 @@ h1 {
 }
 
 .battleship{
-  background-color: red;
+  background-color: blue;
 }
 
 .carrier{
@@ -113,4 +113,14 @@ h1 {
   margin: 3px;
 }
 
+.hover{
+  background-color: grey;
+}
 
+.boom{
+  background-color: red;
+}
+
+.empty{
+  background-color: grey;
+}
