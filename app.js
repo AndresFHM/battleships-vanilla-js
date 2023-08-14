@@ -163,12 +163,19 @@ let playerTurn
 
 //start game
 function startGame() {
-    if (optionContainer.children.length != 0) {
-        infoDisplay.textContent = 'Please place all your pieces first!'
-    } else {
-        const allBoardBlocks = document.querySelectorAll('#computer div')
-        allBoardBlocks.forEach(block => block.addEventListener('click', handleClick))
-    }
+    if (playerTurn === undefined) {
+        if (optionContainer.children.length != 0) {
+            infoDisplay.textContent = 'Please place all your pieces first!'
+        } else {
+            const allBoardBlocks = document.querySelectorAll('#computer div')
+            allBoardBlocks.forEach(block => block.addEventListener('click', handleClick))
+            playerTurn = true
+            turnDisplay.textContent = 'Your Go!'
+            infoDisplay.textContent = 'The game has started'
+        
+        }
+     }
+
 }
 
 startButton.addEventListener('click', startGame)
@@ -220,7 +227,7 @@ function computerGo() {
                 allBoardBlocks[randomGo].classList.contains('taken') &&
                 !allBoardBlocks[randomGo].classList.contains('boom')
             ) {
-                allBoardBlocks[randomGo].classList.add('bloom')
+                allBoardBlocks[randomGo].classList.add('boom')
                 infoDisplay.textContent = 'The computer hit your ship!'
                 let classes = Array.from(allBoardBlocks[randomGo].classList)
                 classes = classes.filter(className => className !== 'block')
@@ -250,7 +257,15 @@ function checkScore(user, userHits, userSunkShips) {
         if (
             userHits.filter(storedShipName => storedShipName === shipName).length === shipLength
         ) {
-            infoDisplay.textContent = `you sunk the ${user}'s ${shipName}`
+            if (user === 'player') {
+                infoDisplay.textContent = `you sunk the computer's ${shipName}`
+                playerHits = userHits.filter(storedShipName => storedShipName !== shipName)
+            }
+            if (user === 'computer') {
+                infoDisplay.textContent = `you sunk the your ${shipName}`
+                computerHits = userHits.filter(storedShipName => storedShipName !== shipName)
+            }
+            userSunkShips.push(shipName)
         }
     }
     checkShip('destroyer', 2)
@@ -261,4 +276,14 @@ function checkScore(user, userHits, userSunkShips) {
 
     console.log('playerHits', playerHits)
     console.log('playerSunkShips', playerSunkShips)
+
+    if (playerSunkShips.length === 5) {
+        infoDisplay.textContent = 'you sunk all the computer\'s ships. You won'
+        gameOver = true
+    }
+    if (computerSunkShips.length === 5) {
+        infoDisplay.textContent = 'the computer sunk all your ships... you lost'
+        gameOver = true
+    }
+
 }
